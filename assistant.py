@@ -1,4 +1,5 @@
 from datetime import datetime
+import webbrowser
 
 greet=["hi","hello","hii","hey","hi there","hello there"]
 chat=True
@@ -15,6 +16,9 @@ while chat:
     elif "time" in user_msg:
         current_time=datetime.now().time()
         print(f"Time is :",current_time.strftime("%I:%M:%S %p"))
+    elif "open" in user_msg:
+        site=user_msg.split()[1]
+        webbrowser.open(f"https://www.{site}.com")
     elif "bye" in user_msg:
         chat=False
     else:
