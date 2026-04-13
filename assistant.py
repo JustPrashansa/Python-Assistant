@@ -3,6 +3,9 @@ import webbrowser
 import requests
 import speech_recognition as sr
 import pyttsx3
+import os
+import psutil
+import pyautogui
 
 engine = pyttsx3.init()
 engine.setProperty("rate",170)
@@ -55,16 +58,35 @@ def get_weather():
     print("Temperature:", data['main']['temp'], "°C")
     print("Weather:", data['weather'][0]['description'])
 
+def open_notepad():
+    os.system("notepad")
+    speak("Opening Notepad")
+
+def open_chrome():
+    os.system("start chrome")
+    speak("Opening Chrome")
+
+def take_screenshot():
+    screenshot = pyautogui.screenshot()
+    screenshot.save("screenshot.png")
+    speak("Screenshot taken")
+
+def system_stats():
+    cpu = psutil.cpu_percent()
+    ram = psutil.virtual_memory().percent
+    speak(f"CPU usage is {cpu} percent and RAM usage is {ram} percent")
 
 while chat:
     user_msg=listen()
     if user_msg in greet:
         speak("Hello user, how may I help you?")
+    elif "open notepad" in user_msg:
+        open_notepad()
     elif "open" in user_msg:
         site=user_msg.split()[1]
         webbrowser.open(f"https://www.{site}.com")
     elif "calculate" in user_msg or "evaluate" in user_msg or "solve" in user_msg:
-        eq=user_msg.split()[1]
+        eq = user_msg.replace("calculate", "").strip()
         print(eval(eq))
     elif "date" in user_msg:
         print(f"Today's date is : {datetime.now().date()}")
@@ -77,5 +99,9 @@ while chat:
         print(f"Time is :",current_time.strftime("%I:%M:%S %p"))
     elif "bye" in user_msg:
         chat=False
+    elif "screenshot" in user_msg:
+        take_screenshot()
+    elif "cpu" in user_msg or "ram" in user_msg or "system" in user_msg:
+        system_stats()
     else:
         print("I cannot understand")
